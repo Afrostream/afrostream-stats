@@ -196,3 +196,61 @@ where
       (("Videos"."duration" - "UsersVideos"."playerPosition") < 300) AND
       --
        "dateStartRead" > '2016-03-01 00:00:00+00'
+
+
+
+
+
+
+
+
+
+-- Nombre de videos par jours
+SELECT d.date, count(uv."videoId") FROM (
+    select to_char(date_trunc('day', (current_date - offs)), 'YYYY-MM-DD')
+    AS date
+    FROM generate_series(1, 30, 1)
+    AS offs
+    ) d
+LEFT OUTER JOIN (
+  select "videoId", "userId", "dateLastRead"
+  from "UsersVideos"
+  inner join "Videos" on "UsersVideos"."videoId"= "Videos"."_id"
+  WHERE
+      -- supprime les entrees UsersVideos pour lesquelles le temps de lecture < 5 min
+      (("dateLastRead" - "dateStartRead") > INTERVAL '5 minute') AND
+       -- supprime les entrees UsersVideos pour lesquelles la position de fin de lecture est < 15 min avant la fin du film
+      (("Videos"."duration" - "UsersVideos"."playerPosition") < 900)
+) as uv
+ON (d.date=to_char(date_trunc('day', uv."dateLastRead"), 'YYYY-MM-DD'))
+GROUP BY d.date
+ORDER BY date desc
+
+
+
+-- nombre d'utilisateurs ayant lu 1 videos par jours
+
+select count("userId"), niarf.date FROM
+(
+SELECT "userId", d.date FROM (
+    select to_char(date_trunc('day', (current_date - offs)), 'YYYY-MM-DD')
+    AS date
+    FROM generate_series(1, 30, 1)
+    AS offs
+    ) d
+LEFT OUTER JOIN (
+  select "userId", "dateLastRead"
+  from "UsersVideos"
+  inner join "Videos" on "UsersVideos"."videoId"= "Videos"."_id"
+  WHERE
+      -- supprime les entrees UsersVideos pour lesquelles le temps de lecture < 5 min
+      (("dateLastRead" - "dateStartRead") > INTERVAL '5 minute') AND
+       -- supprime les entrees UsersVideos pour lesquelles la position de fin de lecture est < 15 min avant la fin du film
+      (("Videos"."duration" - "UsersVideos"."playerPosition") < 900)
+) as uv
+ON (d.date=to_char(date_trunc('day', uv."dateLastRead"), 'YYYY-MM-DD'))
+group by d.date, "userId"
+ORDER BY d.date desc
+) as niarf
+group by niarf.date
+order by niarf.date desc
