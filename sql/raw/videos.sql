@@ -30,3 +30,25 @@ select "foo"."encodingId" from (
 	group by "Videos"."encodingId"
 	) as foo
 where c = 1
+
+
+-- liste de videos (encodingId) ayant au moins 1 sous titre
+select "encodingId", "pfMd5Hash" from "Videos"
+inner join "Captions" on "Captions"."videoId" = "Videos"._id
+group by "Videos"."_id", "encodingId", "pfMd5Hash"
+--where "pfMd5Hash" is not null
+
+
+
+-- liste de videos (encodingId) ayant au moins 1 sous titre FRA
+select "Videos"._id, "encodingId", "pfMd5Hash" from "Videos"
+inner join "Captions" on "Captions"."videoId" = "Videos"._id AND "Captions"."langId" = 1 -- FRA
+group by "Videos"."_id", "encodingId", "pfMd5Hash"
+
+-- liste de videos (encodingId) ayant au moins 1 sous titre FRA (autre facon de faire)
+select "Videos"._id, "encodingId", "pfMd5Hash" from "Videos"
+inner join "Captions" on "Captions"."videoId" = "Videos"._id
+WHERE "Videos"."_id" IN(
+  select distinct("videoId") from "Captions" where "langId" = 1
+)
+group by "Videos"."_id", "encodingId", "pfMd5Hash"

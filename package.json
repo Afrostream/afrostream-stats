@@ -4,8 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "node_modules/.bin/nodemon ./app",
+    "start": "node --harmony server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "afrostream-node-app": "git+https://afrostream-tech:d51e355769ddd0fd212084c35fb99f71ab4146b2@github.com/Afrostream/afrostream-node-app.git#v2.4.0",
+    "express": "^4.14.0",
+    "express-cluster": "0.0.4"
+  },
+  "devDependencies": {
+    "nodemon": "^1.10.2"
+  }
 }
