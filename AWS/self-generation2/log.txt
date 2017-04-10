@@ -1,0 +1,31 @@
+marc@VirtualBox:~/workspace/git/afrostream-stats/AWS/self-generation2$ cat > key_generation.sh
+#!/bin/sh
+
+# http://docs.aws.amazon.com/fr_fr/elasticbeanstalk/latest/dg/configuring-https-ssl.html
+ openssl genrsa 2048 > privatekey.pem
+openssl req -new -key privatekey.pem -out csr.pem
+marc@VirtualBox:~/workspace/git/afrostream-stats/AWS/self-generation2$ openssl genrsa 2048 > privatekey.pem
+Generating RSA private key, 2048 bit long modulus
+................................+++
+...+++
+e is 65537 (0x10001)
+marc@VirtualBox:~/workspace/git/afrostream-stats/AWS/self-generation2$ openssl req -new -key privatekey.pem -out csr.pem
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [AU]:FR
+State or Province Name (full name) [Some-State]:France
+Locality Name (eg, city) []:Nantes
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:Afrostream
+Organizational Unit Name (eg, section) []:Tech
+Common Name (e.g. server FQDN or YOUR name) []:metabase.afrostream.tv
+Email Address []:tech@afrostream.tv
+
+Please enter the following 'extra' attributes
+to be sent with your certificate request
+A challenge password []:
+An optional company name []:
